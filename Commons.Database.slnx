@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Commons.Database.ConnectionFactory/Commons.Database.ConnectionFactory.csproj" />
+  <Project Path="Commons.Database.Extensions.MariaDBConnector/Commons.Database.Extensions.MariaDBConnector.csproj" />
+  <Project Path="Commons.Database.Extensions/Commons.Database.Extensions.csproj" />
+</Solution>
