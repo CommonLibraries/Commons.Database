@@ -12,8 +12,6 @@ namespace Commons.Database.ConnectionFactory
     {
         private readonly IDictionary<string, DatabaseContextOptions> databaseContexts;
 
-        private IDbConnection? connection;
-
         public DefaultConnectionFactory(IDictionary<string, DatabaseContextOptions> databaseContexts)
         {
             this.databaseContexts = databaseContexts;
@@ -39,29 +37,20 @@ namespace Commons.Database.ConnectionFactory
 
         public IDbConnection Open(string? databaseContextKey = null)
         {
-            if (this.connection is null)
-            {
-                this.connection = this.CreateConnection(databaseContextKey);
-                this.connection.Open();
-            }
-
-            return this.connection;
+            var connection = this.CreateConnection(databaseContextKey);
+            connection.Open();
+            return connection;
         }
 
         public async Task<IDbConnection> OpenAsync(string? databaseContextKey = null,CancellationToken cancellationToken = default)
         {
-            if (this.connection is null)
+            if (this.CreateConnection(databaseContextKey) is not DbConnection connection)
             {
-                if (this.CreateConnection(databaseContextKey) is not DbConnection connection)
-                {
-                    throw new InvalidCastException($"The created connection does not inherit {nameof(DbConnection)} class.");
-                }
-                this.connection = connection;
-
-                await connection.OpenAsync(cancellationToken);
+                throw new InvalidCastException($"The created connection does not inherit {nameof(DbConnection)} class.");
             }
 
-            return this.connection;
+            await connection.OpenAsync(cancellationToken);
+            return connection;
         }
     }
 }
